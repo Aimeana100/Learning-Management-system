@@ -1,22 +1,9 @@
-import mongoose, { Document, Model, Schema } from 'mongoose';
+import mongoose, { Model, Schema } from 'mongoose';
 import bcrypt from 'bcryptjs';
+import { IUser } from '../src/types/userTypes';
 
 const emailRegexPattern: RegExp =
   /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-
-export interface IUser extends Document {
-  name: string;
-  email: string;
-  password: string;
-  avatar: {
-    public_id: string;
-    url: string;
-  };
-  role: string;
-  isVerfied: boolean;
-  courses: Array<{ courseId: string }>;
-  comparePassword: (password: string) => Promise<boolean>;
-}
 
 const userSchema: Schema<IUser> = new Schema(
   {
