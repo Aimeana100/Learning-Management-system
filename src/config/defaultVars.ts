@@ -12,9 +12,16 @@ const envVarsSchema = Joi.object()
     DB_URL: Joi.string().required(),
     REDIS_URL: Joi.string().required(),
     ORIGIN: Joi.required(),
+    ACCESS_TOKEN_SECRET: Joi.string().required(),
+    ACTIVATION_TOKEN_SECRET: Joi.string().required(),
     CLOUDINARY_CLOUD_NAME: Joi.string().required(),
     CLOUDINARY_API_KEY: Joi.string().required(),
-    CLOUDINARY_API_SECRET: Joi.string().required()
+    CLOUDINARY_API_SECRET: Joi.string().required(),
+    SMPT_HOST: Joi.string().required(),
+    SMPT_PORT: Joi.string().required(),
+    SMTP_SERVICE: Joi.string().required(),
+    SMTP_MAIL: Joi.string().required(),
+    SMTP_PASSWORD: Joi.string().required()
   })
   .unknown();
 
@@ -23,7 +30,10 @@ const { value: envVariables, error } = envVarsSchema
   .validate(process.env);
 
 if (error) {
-  throw new ErrorHandler(`Config validation error: ${error.message}`, httpStatus.INTERNAL_SERVER_ERROR);
+  throw new ErrorHandler(
+    `Config validation error: ${error.message}`,
+    httpStatus.INTERNAL_SERVER_ERROR
+  );
 }
 
 export default {
@@ -31,9 +41,10 @@ export default {
   port: envVariables.PORT,
   appUrl: envVariables.APP_URL,
   frontendUrl: envVariables.FRONTEND_URL,
-  allowedOrigin : envVariables.ORIGIN,
+  allowedOrigin: envVariables.ORIGIN,
   jwt: {
-    secret: envVariables.JWT_SECRET,
+    access_secret: envVariables.ACCESS_TOKEN_SECRET,
+    activation_secret: envVariables.ACTIVATION_TOKEN_SECRET
   },
 
   db: {
@@ -45,5 +56,12 @@ export default {
     name: envVariables.CLOUDINARY_CLOUD_NAME,
     key: envVariables.CLOUDINARY_API_KEY,
     secret: envVariables.CLOUDINARY_API_SECRET
+  },
+  mails: {
+    host: envVariables.SMPT_HOST,
+    port: envVariables.SMPT_PORT,
+    service: envVariables.SMTP_SERVICE,
+    mail: envVariables.SMTP_MAIL,
+    password: envVariables.SMTP_PASSWORD
   }
 };
