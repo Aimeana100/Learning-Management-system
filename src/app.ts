@@ -1,12 +1,15 @@
 import dotenv from 'dotenv'
 dotenv.config
 import express, {NextFunction, Request, Response} from 'express';
+import httpStatus from 'http-status';
 import cors from 'cors';
 import cookieParser from 'cookie-parser'
+
 import { ErrorHandler } from './utils/errorHandler';
-import defaultVars from './src/config/defaultVars';
-import httpStatus from 'http-status';
+import defaultVars from './config/defaultVars';
 import { errorMiddlware } from './middleware/errorMiddware';
+import router from './routes';
+import swaggerRouter from '../docs';
 
 export const app = express();
 
@@ -18,6 +21,10 @@ app.use(cookieParser())
 
 // cors origin sharing
 app.use(cors({origin: defaultVars.allowedOrigin}))
+
+// routes
+app.use('/api/v1', router)
+app.use(swaggerRouter)
 
 // testing api
 app.get('/api/test', (req: Request, res: Response, next: NextFunction) => {
