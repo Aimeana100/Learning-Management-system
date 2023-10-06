@@ -4,9 +4,9 @@ import express, {NextFunction, Request, Response} from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser'
 import { ErrorHandler } from './utils/errorHandler';
-import defaultVars from './config/defaultVars';
+import defaultVars from './src/config/defaultVars';
 import httpStatus from 'http-status';
-import { errorMiddlware } from './middleware/error';
+import { errorMiddlware } from './middleware/errorMiddware';
 
 export const app = express();
 

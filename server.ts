@@ -1,7 +1,7 @@
 import {app} from './app';
 import dotenv from 'dotenv'
 import { connectDb } from './database/db';
-import logger from './config/logger';
+import logger from './src/config/logger';
 dotenv.config()
 
 // create server configuration
