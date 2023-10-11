@@ -12,5 +12,11 @@ export interface IUser extends Document {
     isVerfied: boolean;
     courses: Array<{ courseId: string }>;
     comparePassword: (password: string) => Promise<boolean>;
+    signAccessToken: () => string;
+    signRefreshToken: () => string;
   }
   
+  export interface ILoginRequest {
+    email: string;
+    password: string;
+  }
