@@ -14,6 +14,9 @@ const envVarsSchema = Joi.object()
     ORIGIN: Joi.required(),
     ACCESS_TOKEN_SECRET: Joi.string().required(),
     ACTIVATION_TOKEN_SECRET: Joi.string().required(),
+    REFRESH_TOKEN_SECRET: Joi.string().required(),
+    ACCESS_TOKEN_EXPIRES: Joi.number().required(),
+    REFRESH_TOKEN_EXPIRES: Joi.number().required(),
     CLOUDINARY_CLOUD_NAME: Joi.string().required(),
     CLOUDINARY_API_KEY: Joi.string().required(),
     CLOUDINARY_API_SECRET: Joi.string().required(),
@@ -44,7 +47,10 @@ export default {
   allowedOrigin: envVariables.ORIGIN,
   jwt: {
     access_secret: envVariables.ACCESS_TOKEN_SECRET,
-    activation_secret: envVariables.ACTIVATION_TOKEN_SECRET
+    refresh_token: envVariables.REFRESH_TOKEN_SECRET,
+    activation_secret: envVariables.ACTIVATION_TOKEN_SECRET,
+    access_expires: envVariables.ACCESS_TOKEN_EXPIRES,
+    refresh_expires: envVariables.REFRESH_TOKEN_EXPIRES
   },
 
   db: {

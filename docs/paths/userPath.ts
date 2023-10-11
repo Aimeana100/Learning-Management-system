@@ -1,7 +1,7 @@
 
 const baseResponses = {
   200: {
-    description: 'User created'
+    description: 'created'
   },
   400: {
     description: 'Bad request'
@@ -23,7 +23,7 @@ const baseResponses = {
 export default {
     '/api/v1/user/register': {
       post: {
-        tags: ['User'],
+        tags: ['Auth'],
         description: 'Create User',
         security: [],
         requestBody: {
@@ -44,9 +44,41 @@ export default {
         responses: baseResponses
       }
     },
+    '/api/v1/user/login': {
+      post: {
+        tags: ['Auth'],
+        description: 'User Login',
+        security: [],
+        requestBody: {
+          content: {
+            'application/json': {
+              schema: {
+                $ref: '#/components/schemas/User'
+              },
+              example: {
+                email: 'user@user.org',
+                password: '12345678'
+              }
+            }
+          },
+          required: true
+        },
+        responses: baseResponses
+      }
+    },
+
+    '/api/v1/user/logout': {
+      post: {
+        tags: ['Auth'],
+        description: 'User Login',
+        security: [],
+        requestBody: {},
+        responses: baseResponses
+      }
+    },
     '/api/v1/user/activate-user': {
       post: {
-        tags: ['User'],
+        tags: ['Auth'],
         description: 'Create User',
         security: [],
         requestBody: {
@@ -64,7 +96,6 @@ export default {
           required: true
         },
         responses: baseResponses
-
       }
     },
 }

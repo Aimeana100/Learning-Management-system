@@ -1,4 +1,4 @@
-require('dotenv').confg();
+require('dotenv').config();
 import { Redis } from "ioredis";
 import defaultVars from "../config/defaultVars";
 import logger from "../config/logger";
