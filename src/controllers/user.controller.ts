@@ -8,10 +8,11 @@ import userModel from '../../src/models/user.model';
 import { ErrorHandler } from '../utils/errorHandler';
 import { catchAsyncError } from '../../src/middleware/catchAsyncError';
 import { createActionToken } from '../utils/manageTokens';
-import { IUser } from '../../src/types/userTypes';
+import { ILoginRequest, IUser } from '../../src/types/userTypes';
 import sendMail from '../utils/sendMail';
 import { IActivationRequest } from '../types/tokenTypes';
 import defaultVars from '../config/defaultVars';
+import { sendToken } from '../utils/jwt';
 
 interface IRegisterUser {
   name: string;
@@ -76,7 +77,7 @@ const activateUser = catchAsyncError(async (req: Request, res: Response, next: N
       return next(new ErrorHandler('Invalid activation code', httpStatus.BAD_REQUEST));
     }
 
-    const { name, email, password} = newUser.user
+    const { name, email, password } = newUser.user
     const existUser = await userModel.findOne({ email})
 
     if(existUser){
@@ -91,4 +92,33 @@ const activateUser = catchAsyncError(async (req: Request, res: Response, next: N
   }
 });
 
-export { registerUser, activateUser };
+const loginUser = catchAsyncError( async (req: Request, res: Response, next: NextFunction) => {
+  const { email, password } = req.body as ILoginRequest
+
+try {
+  if(!email || !password) {
+    return next(new ErrorHandler('Please enter email and password', httpStatus.BAD_REQUEST))
+  }
+  const user = await userModel.findOne({email}).select('+password');
+
+  if(!user || ! await user.comparePassword(password)) {
+    return next(new ErrorHandler('Invalid email or Password', httpStatus.UNAUTHORIZED))
+  }
+  sendToken(user, httpStatus.OK, res)
+
+} catch (error) {
+  return next(new ErrorHandler(error.message, httpStatus.UNAUTHORIZED))
+}
+})
+
+const logoutUser = catchAsyncError( async(req: Request, res: Response, next: NextFunction)=>{
+  try {
+    res.cookie('access_token', '', {maxAge: 1});
+    res.cookie('refresh_token', '', { maxAge: 1});
+    res.status(httpStatus.OK).json({status: 'success', message: 'Logout successfully'})
+  } catch (error) {
+    return next(new ErrorHandler(error.message, httpStatus.BAD_REQUEST))
+  }
+})
+
+export { registerUser, activateUser, loginUser, logoutUser };
