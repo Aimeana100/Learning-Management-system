@@ -3,7 +3,7 @@ import { Router } from 'express';
 
 import schemas from './schemas';
 import paths from './paths';
-import defaultVars from '../src/config/defaultVars';
+import defaultVars from '../config/defaultVars';
 
 const { serve, setup } = swagger;
 

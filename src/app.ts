@@ -9,7 +9,7 @@ import { ErrorHandler } from './utils/errorHandler';
 import defaultVars from './config/defaultVars';
 import { errorMiddlware } from './middleware/errorMiddware';
 import router from './routes';
-import swaggerRouter from '../docs';
+import swaggerRouter from './docs';
 
 export const app = express();
 
@@ -26,13 +26,8 @@ app.use(cors({origin: defaultVars.allowedOrigin}))
 app.use('/api/v1', router)
 app.use(swaggerRouter)
 
-// testing api
-app.get('/api/test', (req: Request, res: Response, next: NextFunction) => {
-  res.status(200).json({status: 'OK', message: "API test successful"})
-})
-
 // unkown routes
-app.all('*', (req: Request, res: Response, next: NextFunction) => {
+app.all('*', (req: Request, _res: Response, next: NextFunction) => {
     const err = new ErrorHandler(`Route ${req.originalUrl} not found`, httpStatus.NOT_FOUND) 
     next(err)
 })

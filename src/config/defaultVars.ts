@@ -17,14 +17,15 @@ const envVarsSchema = Joi.object()
     REFRESH_TOKEN_SECRET: Joi.string().required(),
     ACCESS_TOKEN_EXPIRES: Joi.number().required(),
     REFRESH_TOKEN_EXPIRES: Joi.number().required(),
-    CLOUDINARY_CLOUD_NAME: Joi.string().required(),
+    CLOUDINARY_API_NAME: Joi.string().required(),
     CLOUDINARY_API_KEY: Joi.string().required(),
     CLOUDINARY_API_SECRET: Joi.string().required(),
     SMPT_HOST: Joi.string().required(),
     SMPT_PORT: Joi.string().required(),
     SMTP_SERVICE: Joi.string().required(),
     SMTP_MAIL: Joi.string().required(),
-    SMTP_PASSWORD: Joi.string().required()
+    SMTP_PASSWORD: Joi.string().required(),
+
   })
   .unknown();
 
@@ -59,7 +60,7 @@ export default {
   },
 
   cloudinary: {
-    name: envVariables.CLOUDINARY_CLOUD_NAME,
+    name: envVariables.CLOUDINARY_API_NAME,
     key: envVariables.CLOUDINARY_API_KEY,
     secret: envVariables.CLOUDINARY_API_SECRET
   },
