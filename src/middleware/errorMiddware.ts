@@ -1,19 +1,19 @@
-import { NextFunction, Request, Response } from "express";
-import { ErrorHandler } from "../utils/errorHandler";
-import httpStatus from "http-status";
+import { NextFunction, Request, Response } from 'express';
+import { ErrorHandler } from '../utils/errorHandler';
+import httpStatus from 'http-status';
 
 export const errorMiddlware = (
   err: ErrorHandler | any,
   req: Request,
   res: Response,
-  next: NextFunction
+  _next: NextFunction
 ) => {
   err.status = err.status || 500;
-  err.message = err.message || " Internal Server Error";
+  err.message = err.message || ' Internal Server Error';
 
   // wrong Mongodb id error
 
-  if (err.name === "CastError") {
+  if (err.name === 'CastError') {
     const message = `Resource not found: ${req.path}`;
     err = new ErrorHandler(message, httpStatus.NOT_FOUND);
   }
@@ -25,18 +25,18 @@ export const errorMiddlware = (
   }
 
   // wrong jwt error
-  if (err.name === "JsnWebTokenError") {
-    const message = "Invalid token";
+  if (err.name === 'JsnWebTokenError') {
+    const message = 'Invalid token';
     err = new ErrorHandler(message, httpStatus.UNAUTHORIZED);
   }
 
-  if (err.name === "TokenExpiredError") {
-    const message = "Token has expired";
+  if (err.name === 'TokenExpiredError') {
+    const message = 'Token has expired';
     err = new ErrorHandler(message, httpStatus.UNAUTHORIZED);
   }
 
   res.status(err.status).json({
-    status: "failed",
-    message: err.message,
+    status: 'failed',
+    message: err.message
   });
 };

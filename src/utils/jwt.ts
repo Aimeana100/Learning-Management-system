@@ -14,31 +14,31 @@ interface ITokenOption {
   secure?: boolean;
 }
 
+// parse envirnrment variables to integrate with fallbacks
+export const accessTokenExpires = parseInt(defaultVars.jwt.access_expires);
+export const refreshTokenExpires = parseInt(defaultVars.jwt.refresh_expires);
+
+// options for cookies
+export const accessTokenOptions: ITokenOption = {
+  expires: new Date(Date.now() + accessTokenExpires * 60 * 60 * 1000),
+  maxAge: accessTokenExpires * 60 * 60 * 1000,
+  httpOnly: true,
+  sameSite: 'lax'
+};
+
+export const refreshTokenOptions: ITokenOption = {
+  expires: new Date(Date.now() + refreshTokenExpires * 60 * 1000),
+  maxAge: refreshTokenExpires * 24 * 60 * 60 * 1000,
+  httpOnly: true,
+  sameSite: 'lax'
+};
+
 export const sendToken = (user: IUser, status: number, res: Response) => {
   const accessToken = user.signAccessToken();
   const refreshToken = user.signRefreshToken();
 
   // upload session to redis
   redis.set(user._id, JSON.stringify(user));
-
-  // parse envirnrment variables to integrate with fallbacks
-  const accessTokenExpires = parseInt(defaultVars.jwt.access_expires);
-  const refreshTokenExpires = parseInt(defaultVars.jwt.refresh_expires);
-
-  // options for cookies
-  const accessTokenOptions: ITokenOption = {
-    expires: new Date(Date.now() + accessTokenExpires * 1000),
-    maxAge: accessTokenExpires * 1000,
-    httpOnly: true,
-    sameSite: 'lax'
-  };
-
-  const refreshTokenOptions: ITokenOption = {
-    expires: new Date(Date.now() + refreshTokenExpires * 1000),
-    maxAge: refreshTokenExpires * 1000,
-    httpOnly: true,
-    sameSite: 'lax'
-  };
 
   // only set secure to true in production
 

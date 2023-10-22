@@ -1,9 +1,9 @@
 import mongoose, { Model, Schema } from 'mongoose';
-import bcrypt from 'bcryptjs'
-import jwt from 'jsonwebtoken'
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 require('dotenv').config();
 
-import { IUser } from '../../src/types/userTypes';
+import { IUser } from '../types/userTypes';
 import defaultVars from '../config/defaultVars';
 
 const emailRegexPattern: RegExp =
@@ -28,7 +28,6 @@ const userSchema: Schema<IUser> = new Schema(
     },
     password: {
       type: String,
-      required: [true, 'Please enter your password'],
       minlength: [6, ' Password must be at least 6 characters'],
       select: false
     },
@@ -70,14 +69,16 @@ userSchema.methods.comparePassword = async function (enterPassword: string): Pro
 };
 
 // sign in access token
-userSchema.methods.signAccessToken = function(){
-  return jwt.sign({id: this._id}, defaultVars.jwt.access_secret)
-} 
+userSchema.methods.signAccessToken = function () {
+  return jwt.sign({ id: this._id }, defaultVars.jwt.access_secret, {
+    expiresIn: '5m'
+  });
+};
 
 // sign refresh token
-userSchema.methods.signRefreshToken = function(){
-  return jwt.sign({id: this._id}, defaultVars.jwt.refresh_token)
-}
+userSchema.methods.signRefreshToken = function () {
+  return jwt.sign({ id: this._id }, defaultVars.jwt.refresh_token, { expiresIn: '3d' });
+};
 const userModel: Model<IUser> = mongoose.model('User', userSchema);
 
 export default userModel;
